@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: "Tournament Brackets Back End"
+
+Parameters:
+  AppName:
+    Type: String
+    Default: "TournamentBrackets"
+    Description: Name of the Project
+  LambdaBucketPrefix:
+    Type: String
+    Default: "tournament-brackets-lambda"
+
+Resources:
+  # S3
+  LambdaSourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${LambdaBucketPrefix}-${AWS::AccountId}"
+  # Dynamo
+  BracketsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "brackets"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+  GamesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "games"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+  UserBracketsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "user-brackets"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 15
+        WriteCapacityUnits: 15
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
